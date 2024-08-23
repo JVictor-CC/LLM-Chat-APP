@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: tcc-backend-container
+    ports:
+      - 8000:8000
+    volumes:
+      - tcc-backend-volume:/local_model
+    restart: unless-stopped
+    networks:
+      - tcc-app-network
+
+  frontend:
+    build: ./frontend
+    container_name: tcc-frontend-container
+    ports:
+      - 8501:8501
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - tcc-app-network
+
+volumes:
+  tcc-backend-volume:
+    driver: local
+
+networks:
+  tcc-app-network:
+    driver: bridge
